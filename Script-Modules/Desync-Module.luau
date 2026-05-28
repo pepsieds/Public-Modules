@@ -754,7 +754,7 @@ end
 desyncRunning = false
 desyncConnections = {}
 
-function StartDesync()
+function startDes()
 	if desyncRunning then return end
 
 	desyncRunning = true
@@ -811,7 +811,7 @@ function StartDesync()
 	end)
 end
 
-function StopDesync(keepIndicatorSeconds)
+function StopDes(keepIndicatorSeconds)
 	desyncRunning = false
 	local stopMode = activeDesyncMode or Config.Desync.Mode
 	local shouldStopForcedVoidHide = DesyncV2ForcedVoidHide and not (Config.Desync and Config.Desync.VoidHide and Config.Desync.VoidHide.Enabled)
@@ -869,10 +869,10 @@ function StopDesync(keepIndicatorSeconds)
 	activeDesyncMode = nil
 end
 
-StopDesync()
+StopDes()
 
 return {
-	StartDesync = StartDesync(),
-	StopDesync = StopDesync(),
-	Config = Config
+	StartDesy = startDes,
+	StopDesy = StopDes,
+	Configuration = Config
 }
