@@ -1,4 +1,76 @@
 local module = {}
+module["Honored One"] = function()
+return [[
+ipasapipas
+apipasapip
+asapuoa[sk]a
+ouoadaouoa
+[dk]aouoafao
+yps[hk]spyps
+hspyps[hk]sp
+ypshsptof
+[kz]fotofkfo
+tof[kz]fotof
+lfo[iz]p[aj]s
+[ak]p[il]pasa
+p[iz]p[aj]s[ak]
+p[il]pa[sk][aj]
+p[uz]o[ah]s[aj]
+o[uk]oadao
+[uz]o[ah]f[aj]o
+[uk]oa[fj][ah]o
+[yz]p[sh]h[sj]p
+[yk]pshsp[yz]
+p[sh]h[sj]p[yk]
+ps[hj][sz]p
+[thv]o[gc]h[gz]
+o[tk]odhdoto
+fkkfo[tkz]of
+[klv]fo[4l]80s
+[ef]f[qf]typ
+[ed]f[qh]tup
+[td]p[qs]tuoy
+15[8hk][0l][rk]
+w[8of]wru[rd]w
+[8od]wry[uf]
+[yh][uh]tyost
+[fhlq]eEiz[tlh]
+Estf[qd][9ph]q
+et[dg]0[qsf]et
+uoy[wu]t[yfk]
+[tl][yk]odaty
+d[0s]eyouwr
+[uf][ok][pzv]ti
+pfbggbf[gb]
+[ps]jbklbk
+[hm][sfv]vxdvv
+z[4sfl]80e0dh
+khgd[adz]oiy
+r[fx]9[4fx]80o
+ao[8lm][wkn]e
+[fx]q[dz][1ahk]5
+[8a][0s][wa][yo]
+[8y]w[rgjc]y
+[fhx][7dgz]qery
+x[3sl]79WtOs
+Ot[toa6]0[esl]e
+[tdz]u[efjlx]t
+[kno]r[lmt]9
+[5hlv]9wrth
+[wl][yh][ol]crx
+[4ljx]8qwe[tx]
+[qjz][tl]iwel
+[2jv]690qe
+[9vn][qk][ex][tb]
+[0v][qs][6lbm]80
+[wsf]etqw[tf]h
+ze[wk]q[7ofh]0
+wruo[wa]ufhk
+[qm]un[am]vsm
+hgf[tm]uOnm
+[sv]mdmva
+]]
+end
 module['The World'] = function()
 return [[
 [%370] 3 3 3 3 3 3 3 3 3 3 [3wru] 3 3 3 3 3 3 3 [O3af]
