@@ -1,5 +1,268 @@
 local module = {}
 
+module['Rush E'] = function()
+	return [[
+u----
+u----
+u----
+u----
+u--u--
+u--u--
+u-u-u-u-
+u u u u u u u [fu] 
+[0fu] [03fx] [03fx] [03fx] [3x] [3x] [3x] [3x] 
+[6]-[08]-3-[08]-
+[6]-[08]-3-[08]-
+[6u] u [08u] u [3u] u [08u] u 
+[6u] u [08u] u [3u] u [08u] u 
+[6u] u [08u] u [3u] i [08u] Y 
+[6u]-[08p]-[3s]-[08]-
+[%d] d [09d] d [3d] s [09a] d 
+[6s] s [08s] s [3s] a [08p] s 
+[7a] a [(ar] a [$I]-[(ae]-
+[0O]--[03]--$5%
+[6u] u [08u] u [3u] u [08u] u 
+[6u] u [08u] u [3u] u [08u] u 
+[6u] i [08u] Y [3u]-[08p] s 
+[6f]-[08j]-[3l]-[08]-
+[9z] l [kqr] z [8l] k [0jt] l 
+[7k] j [9HW] k [6j] f [8es] p 
+[03g] f [$dQ] s [%aW] p [03O] a 
+[6ep]--[3]--$5%
+[6u] u [08u] u [3u] u [08u] u 
+[6u] u [08u] u [3u] u [08u] u 
+[6u] u [08u] u [3u] i [08u] Y 
+[6u]-[08p]-[3s]-[08]-
+[%d] d [09d] d [3d] s [09a] d 
+[6s] s [08s] s [3s] a [08p] s 
+[7a] a [(ar] a [$I]-[(ae]-
+[0O]--[03]--$5%
+[6u] u [08u] u [3u] u [08u] u 
+6 u [08u] u [3u] u [08u] u 
+[6u] i [08u] Y [3u]-[08p] s 
+[6f]-[08j]-[3l]-[08]-
+[9z] l [kqr] z [8l] k [0jt] l 
+[7k] j [9HW] k [6j] f [8es] p 
+[03g] f [$dQ] s [%aW] p [03O] a 
+[6ep]--[6]--78*
+[29d]-[eq] S [6d]-[efq]-
+[9g]-[efq]-[6d]-[egq]-
+[8f]-[0e] d [6s]-[0de]-
+[8f]-[0e]-6-[0es]-
+[7a]-[9W] P [3a]-[9sW]-
+[7d]-[9sW]-[3a]-[9dW]-
+[18s]-[6p]-[18s]-[03f]-
+[6ej]-f-[6s]-p-78*
+[29d]-[eq] S [6d]-[efq]-
+[9g]-[efq]-[6d]-[egq]-
+[8f]-[0e] d [6s]-[0de]-
+[8f]-[0e]-[6j]-[0e]-
+7-[deq]-9-[egq]-
+[%03f]-[18s]-[29d]-[7a]-
+[6p]----[03afOu]-
+[06efjps]----
+[6u] u [08u] u [3u] u [08u] u 
+[6u] u [08u] u [3u] u [08u] u 
+[6u] u [08u] u [3u] i [08u] Y 
+[6u]-[08p]-[3s]-[08]-
+[%d] d [09d] d [3d] s [09a] d 
+[6s] s [08s] s [3s] a [08p] s 
+[7a] a [(ar] a [$I]-[(ae]-
+[0O]--[03]--$5%
+[6u] u [08u] u [3u] u [08u] u 
+6 u [08u] u [3u] u [08u] u 
+[6u] i [08u] Y [3u]-[08p] s 
+[6f]-[08j]-[3l]-[08]-
+[9z] l [kqr] z [8l] k [0jt] l 
+[7k] j [9HW] k [6j] f [8es] p 
+[03g] f [$dQ] s [%aW] p [03O] a 
+[6ep]--[!(@*%^$148abcdEfghiIjklmnoOpPqQstTuvWxyYz]--
+6-[08]-3-[08]-
+6-[08]-3-[08]-
+6-[08]-3-[08]-
+6-[08]-3-[08]-
+6-[08e]-3-[08e]-
+6-[08e]-3-[08e]-
+6-[08t]-3-[08t]-
+6-[08t]-3-[08t]-
+6-[etu]-3-[etu]-
+6-[etu]-3-[etu]-
+6-[ptu]-3-[ptu]-
+6-[stu]-3-[stu]-
+[6u] u [etu] u [3u] u [eftu] f 
+[6x] x [eftu] f [3u] u [etu] u 
+[6u] u [etu] u [3u] i [etu] Y 
+[6u]-[eptu]-[3s]-[etu]-
+[%d] d [09dW] d [3d] s [09aW] d 
+[6s] s [estu] s [3s] a [eptu] s 
+[7a] a [(ar] a [$I]-[(ae]-
+[0O]--[03]--$5%
+[6u] u [etu] u [3u] u [etu] u 
+6 u [etu] u [3u] u [etu] u 
+[6u] i [etu] Y [3u]-[eptu] s 
+[6f]-[ejtu]-[3l]-[etu]-
+[9fkz] l [kqr] z [8fjl] k [0jt] l 
+[7Hk] j [9HW] k [6fj] f [8es] p 
+[03g] f [$dQ] s [%aW] p [03O] a 
+[6ep]----
+[29d]-[eq] S [6d]-[efq]-
+[9g]-[efq]-[6d]-[egq]-
+[8f]-[0e] d [6s]-[0de]-
+[8f]-[0e]-6-[0es]-
+[7a]-[9W] P [3a]-[9sW]-
+[7d]-[9sW]-[3a]-[9dW]-
+[18s]-[6p]-[18s]-[03f]-
+[6ej]-f-[6s]-p-78*
+[29d]-[eq] S [6d]-[efq]-
+[9g]-[efq]-[6d]-[egq]-
+[8f]-[0e] d [6s]-[0de]-
+[8f]-[0e]-[6j]-[0e]-
+7-[deq]-9-[egq]-
+[%03f]-[18s]-[29d]-[7a]-
+[6p]----[03afOu]-
+[06efjps]----
+[6u] u [etu] u [3u] u [eftu] f 
+[6x] x [eftu] f [3u] u [etu] u 
+[6u] u [etu] u [3u] i [etu] Y 
+[6u]-[eptu]-[3s]-[etu]-
+[%d] d [09dW] d [3d] s [09aW] d 
+[6s] s [estu] s [3s] a [eptu] s 
+[7a] a [(ar] a [$I]-[(ae]-
+[0O]--[03]--$5%
+[6u] u [etu] u [3u] u [etu] u 
+6 u [etu] u [3u] u [etu] u 
+[6u] i [etu] Y [3u]-[eptu] s 
+[6f]-[ejtu]-[3l]-[etu]-
+[9fkz] l [kqr] z [8fjl] k [0jt] l 
+[7Hk] j [9HW] k [6fj] f [8es] p 
+[03g] f [$dQ] s [%aW] p [03O] a 
+[6ep]----
+[^i] i [EiT] i [4i] i [EiT] i 
+[^i] i [EiT] i [4i] i [EiT] i 
+[^i] i [EiT] i [4i] I [EiT] u 
+[^i]-[EiPT]-[4S]-[EiT]-
+[6D] D [(Deq] D [4D] S [(eqs] D 
+[^S] S [EiST] S [4S] s [EiPT] S 
+[8s] s [0st] s [5o]-[0Es]-
+[pq]--[4q]--5%6
+[^i] i [EiT] i [4i] i [EiT] i 
+^ i [EiT] i [4i] i [EiT] i 
+[^i] I [EiT] u [4i]-[EiPT] S 
+[^g]-[EiJT]-[4L]-[EiT]-
+[(Z] L [lQt] Z [*L] l [JqT] L 
+[8l] J [(jW] l [^J] g [*ES] P 
+[4Gq] g [5Dw] S [6es] P [4pq] s 
+[^EP]----
+[IsYZ] L l Z [iLPT] l J L 
+[lptY] J j l [EJPT] g S P 
+[4Gq] g [5Dw] S [6es] P [4pq] s 
+[^EP]--[^gJS]
+]]
+end
+
+module['La Distancia'] = function()
+	return [[
+[06]0etute[9q]eyi[03]rW
+[06]0etute[9q]eyi[03]rW
+[6u]t[etw]u[5t][%e]u[6t]i[tw]ei[5t]e[%i]t
+[6u]t[etw]u[5t][%e]u[6t]i[tw]ei[5t]e[%i]t
+[6u]t[etw]u[5t][%e]u[6t]i[tw]ei[5t]e[%i]t
+[6u]t[etw]u[5t][%e]u[6t]i[tw]ei[5t]e[%i]t
+[6i]u[twy]u[5y][%t]y[6t][Ei][etw]E[it][5y]u[%i] 
+[6u]t[etw]u[5t][%e]u[6t]i[tw]ei[5t]e[%i]t
+[6i]u[twy]u[5y][%t]y[6t][Ei][etw]E[it][5y]u[%i] 
+[6u]t[etw]u[5t][%e]u[6t]i[tw]ei[5t]e[%i]t
+[0eu][Et][e][uw][et][eE][eu][tw][ei][Et][e][iw][et][eE][ei][tw]
+[eu][Et][e][uw][et][eE][eu][tw][ei][Et][e][iw][et][eE][iy][it]
+[Eiqu][it][eu][uy][tu][ei][u][ty][iu][it][eu][iy][tu][ei][iu][ty]
+[u][it][eu][uy][tu][ei][u][ty][iu][it][eu][iy][ot][ei][iu][ty]
+[otuw][it][eu][uy][tu][ei][u][ty][iu][it][eu][iy][tu][ei][iu][ty]
+[ou][it][eu][uy][it][eu][uy][t][iu][ty][et][Ei][ty][et][Ei][et]
+[Eiqtu][Et][e][uw][Et][e][uw][qt][ei][tw][eq][0i][tw][eq][0i][9t]
+[0u][qt][0e][9u][0t][eq][0u][9t][0i][qt][0e][9i][0t][eq][0i][9t]
+[0eu][Et][e][uw][et][eE][eu][tw][ei][Et][e][iw][et][eE][ei][tw]
+[eu][Et][e][uw][et][eE][eu][tw][ei][Et][e][iw][et][eE][iy][it]
+[Eiqu][it][eu][uy][tu][ei][u][ty][iu][it][eu][iy][tu][ei][iu][ty]
+[u][it][eu][uy][tu][ei][u][ty][iu][it][eu][iy][ot][ei][iu][ty]
+[otuw][it][eu][uy][tu][ei][u][ty][iu][it][eu][iy][tu][ei][iu][ty]
+[ou][it][eu][uy][it][eu][uy][t][iu][ty][et][Ei][ty][et][Ei][et]
+[Eiqtu][Et][e][uw][Et][e][uw][qt][ei][tw][eq][0i][tw][eq][0i][9t]
+[0u][qt][0e][9u][0t][eq][0u][9t][0i][qt][0e][9i][0t][eq][0i][9t]
+[tu]e[0x][tu][ez]0[tu]e[itz]e[0l][it]e0[it]e
+[ru]w[0l][ru][kw]0[lru]w[irz]w[0l][ikr]w0[ijr]w
+[ekt]q8[ejt]q8[eht]q[eky]q8[ejy]q8[ejy]q
+[HrW]0[7g][frW]07[rW]0[Wy]07[Wy]07[Wy]0
+[gtu][ef][0d][ftu][eg][0h][tu]e[it]e0[it]e0[it]e
+[fru]w0[gru]w0[hru]w[ijr]w0[hir]w0[gir]w
+[eft][gq][8f][det][fq]8[det]q[esy]q8[aey]q8[esy]q
+[arW][0s][7a][prW][0a]7[prW]0[OWy]07[Wy]07[Wy]0
+[0estu]teu[pt]e[0etu][0et][0eit]t[0et]i[0ety]e[0eit]t
+[9gruw]tfedu[ft]e[9ruw][9rtw][9irw]t[9erw]i[0tw]e[9irw]t
+[8ehqu][gt][ef][du][ft][de][8eqsu][8aeqt][8eiqs][at][8epq][io][9pqrt][eo][8eiq][tu]
+[07iuW][tu][ey][u][ty][et][07uWy][07tW][07irW][t][07erW][ei][08etW][eq][09irW]t
+[0etu]teute[0etu][0et][0eit]t[0et]i[0ety]e[0eit]t
+[9oruw][pt][ae][su][dt][ef][9gruw][9hrtw][9ijrw]t[9erw]i[0tw]e[9irw]t
+[8eiqu]t[ep]u[at]e[8eqsu][8eqt][8deiq]t[8efq]i[9gqrt]e[8ehiq]t
+[07fuW]teute[07uW][07tW][07iW]t[07eW]i[08et]e[9irW]t
+[0aetuy][pt][aey][su][dit][esu][0aertuy]t[0epty]u[0aeity][pt]u[0aety]i[isu][0deioty][esu]i[0aeity]o[pt]
+[9apruwy][pt][aey][su][dit][esu][9aruwy][9prtw][9airwy][pt][9aerwy][isu][0ditw][efsu][9agirwy][hpt]
+[8aegquy][pt][aey][gsu][dijt][esu][8aegquy][8ekpqt][8aeiqy][pt][8aeqy][isu]j[9diqrt][eksu][8aeijqy]k[pt]j
+[07aHuWy][pt][aey][gsu][dfit][esu][07auWy][07ptW][07aiWy][pt][07aeWy][isu][08deit][esu][9airWy][pt]
+[0aetuy][pt][aey][su][dipt][esu]a[0aetuy]s[0ept][0adeity][pt]f[0aety]g[isu][0dehity][esu]g[0aeity]f[pt]
+[9afruwy][pt][aey][su]d[dit][esu][9arsuwy][9prtw]a[9airwy]s[pt][9aerwy][isu]p[0ditw]a[esu][9aiprwy][pt]o
+[8aequy]p[pt][aeoy][su]i[dit]o[esu][8aeiquy][8epqt]u[8aeiqy]i[pt][8aeqy][isu][9diqrt][esu][8aeiqy][opt]i
+[07auWy]u[pt][aey][su][dit][esu][07auWy][07ptW][07aiWy][pt][07aeWy][isu][08deit][esu][9airWy][pt]
+[0aetuy][pt][aey][su][dit][esu][0aeftuy][0ept][0aeijty][pt][0aekty][isu][0deilty][esu][0aeityz][pt]
+[9akruwy][pt][aey]h[su][dit][esu]f[9aruwy][9prtw][9airswy][pt][9aerwy]a[isu][0ditw][esu]s[9airwy][pt]
+[8aequy][pt][aey]p[su][dit][esu][8aequy]o[8epqt][8aeiqy][pt][8aeqy][isu][9diqrt][esu][8aeipqy][pt]
+[07aOuWy][pt][aeOy][su][dit][esu][07auWy][07ptW][07aiWy][pt][07aeWy][isu][08deitu][esu][9airWy][pt]
+[0aeOtuy][pt][aeOy][psu][dit][esu][0aetuy][0ept][0aeipty][pt][0aety][iosu][0deity][esu][0aeity][pt]
+[9airuwy][pt][aey][su][ditu][esu][9aruwy][9prtw][9airwy][pt][9aerwy][isu][0ditw][esu][9airwy][pt]
+[8aeiquy][ptu][aey][su][dity][estu][8aequy][8epqt][8aeiqry][pt][8aeqry][eisu][9diqrt][esu][8aeiqwy][pt]
+[07aquWy][pt][aey][0su][dit][esu][07auWy][07ptW][07aiWy][pt][07aeWy][isu][08deit][esu][9airWy][pt]
+[4ei]----[5or]-[4ei] 
+[3uW] 0WrurW0ru--
+[4ei]----[3uW]-[4ei] 
+[5or] wryoyrwryo--
+[4pt]----[5ay]-[4pt] 
+[3Or] tyuioiu--
+[4pt]----[3Or]-[4pt] 
+[5ay] rtyuytr--
+[4is]----[5do]-[4is] 
+[3au]34567890qwq0-
+[4is]----[3au]-[4is] 
+[5do]uoppour--
+[4gp]----[5ah]-[4gp] 
+[3fO]-ruetwrqe0-
+[4gp]----[3fO]-[4gp] 
+[5ah] ertyuiopasdfgh
+[ej] [tu] W [tu]w [tu] Q [tu]-
+[ej] [iy] e [hiT]e [it] e [ir]-
+[eg] [tu] W [ftu]w [tu] Q [tu]-
+[eg] [iy]f[eg] [fiT][eg] [fit] [de] [irs]-
+[es] [tu] W [tu]w [tu] Q [tu]-
+[eg]f[diy]f[de]s[diT][es]a[ipt]a[es]d[fir]g 
+ef [tu] W [tu]w [tu] Q [tu]-
+[eg] [iy]hej[iT]ek[it] le [ir]z-
+[6el] [6tu] W [tu][6w] [6tu] Q [6tu]1 
+[2e] [2iy] e [iT][2e] [2it] e [2ir]4 
+[6e] [6tu] W [tu][6w] [6tu] Q [6tu]1 
+[2e] [2iy] e [iT][2e] [2it] e [2ir]4 
+[6e]l [6tu] W [tu][6w]k[6tu] Q [6tu]1 
+[2el] [2iy]kej[iT][2e]k[2it] je [2ir]h4 
+[6eG] [6tu] W [tu][6w]h[6tu] Q [6tu]1 
+[2e] [2iy] e [iT][2e] [2it] je [2ir]j4 
+[6ej] [6tu]kWl[tu][6w]l[6tu] Q [6tu]1 
+[2e] [2iy] e [iT][2e]z[2it] le [2ir]k4 
+[6ek] [6tu] [jW] [tu][6w] [6tu] Q [6tu]1 
+[2e] [2iy] e [iT][2e] [2it] e [2ir]4 
+[6e] [6tu] W [tu][6w] [6tu] Q [6tu]1 
+[2e] [2iy] e [iT][2e] [2it] e [2ir]4 
+[6e] [6tu] W [tu][6w] [6tu] Q [6tu]1 
+[2e] [2iy] e [iT][2e] [2it] e [2ir]4
+]]
+end
+
 module['Creep'] = function()
 	return [[
 5 9 r w 9 r w 9 
