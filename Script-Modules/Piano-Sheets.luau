@@ -1,4 +1,118 @@
 local module = {}
+module["Never Meant to Belong"] = function()
+	return [[
+[6rtu]--
+[rtu]--[etu]--
+[etu]--[5rtu]--
+[rtu]--[etu]--
+[etu]--[4rtu]--
+[rtu]--[etu]--
+[etu]--[3eru]--
+[eru]--[ru]W----
+klxz6--
+6--
+5--
+5--
+klxz4--
+4--
+3--
+3--
+klvx6--
+Zx6--
+Z [5x]--
+Z x5--
+c-[4x]--
+z-l-k4-
+j--h-[3G]--
+g--f-3--
+upah[6f]--
+D-f6--
+D-[5f]--
+l--k-5H--
+j--a-[4s]--
+a-s4--
+d-[3s]--
+i--[3u]--
+f--d-[6s]--
+a-s--d-s6--
+a-[5s]--
+a-[5s]-
+l-k-H-j-a-[4s]a
+p--4--
+3--
+a--O--
+[@r]--[9t]--
+e--r--
+t--[TW]--
+y--[qu]--
+i--[0I]--
+o--p0--
+o--[6P]--
+[5p]--
+i--o--[$u]--
+O-p-a--
+p-O p a [4s]--
+O--i--
+y--[7u]--
+o-[3i]--
+[3u]--
+[6rtu]--
+[rtu]--[etu]--
+[etu]--[5rtu]--
+[rtu]--[etu]--
+[etu]--[4rtu]--
+[rtu]--[etu]--
+[etu]--[3eru]--
+[eru]--[ru]W--
+klxz6--
+6--
+5--
+5--
+klxz4--
+4--
+3--
+3--
+klvx6--
+Z[6x]--
+Z [5x]--
+Z x5--
+c-[4x]--
+z-l-k4-
+j--h-[3G]--
+g--f-3--
+upah[6f]--
+D-f6--
+D-[5f]--
+l--k-5H--
+j--a-[4s]--
+a-s4--
+d-[3s]--
+i--[3u]--
+f--d-[6s]--
+a-s--d-s6--
+a-[5s]--
+a-s5-
+l-k-H-j-a-[4s]a
+p--4--
+3--
+a--O--
+[@r]--[9t]--
+e--r--
+t--[TW]--
+y--[qu]--
+i--[0I]--
+o--p0--
+o--[6P]--
+[5p]--
+i--o--[$u]--
+O-p-a--
+p-O p a [4s]--
+O--i--
+y--[7u]--
+o-[3i]--
+[3u]--
+]]
+end
 
 module['Moonlight Sonata 3rd Movement'] = function()
 	local SHEET = [====[
