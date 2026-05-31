@@ -1,5 +1,5 @@
 local module = {}
-module["Bumbelbee"] = function()
+module["Joskue Theme"] = function()
 return [[
 [4gOqs]-[03fhs]-[(@DHs]-[29dgl]-[!9H] 
 [!*gkS]-J-[!*fHs] [18]-[18Os] [(@D] 
