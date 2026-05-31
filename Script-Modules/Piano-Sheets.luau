@@ -1,4 +1,50 @@
 local module = {}
+module["Bumbelbee"] = function()
+return [[
+[0x][rZ][Oz]LzLlklkJjHhGg
+[3f][7D][dW]SdSsasaPpOoIi
+uYyTyTtruYyTyTtr
+[6u][0Y][ty]TtiuY[tu]YyT[et]TyY
+[6u][0Y][ty]TtiuY[tu]YyT[et]TyY
+[6u][0Y][ty]T[eqy]Ttr[0et]TyY[09ruW]iuY
+[08eu]YyT[eqy]Ttr[0et]TyY[09ruW]IoO
+[*epw]OoI[9eiq]PpO[epqy]OoI[9irw]IoO
+[epqy]OoIiPpO[epqy]OoI[9irw]IoO
+[epqy]OoI[Eowy]Iiu[eiqy]IoO[0epTw]PpO
+[epqy]OoI[9Eow]Iiu[9eiq]IoO[*0epw]PpO
+[9pq]ere[pr]ere[EP]WEWEWEW
+pere[pr]ere[EP]WEWEWEW
+[ep]PpO[EpW]PpO[ep]P[EpW]O[prw]P[pQt]O
+[pqT]PasSsaPpPasSsaP
+[pq]yuy[du]yuy[DSY]TYTYTYT
+dyuy[du]yuy[DSY]TYTYTYT
+[dy]DdS[dTY]DdS[dy]D[dTY]S[dtu]D[dir]S
+[dEI]DfgGgfDdDfgGgfD
+[dEoy]SsaPDdS[dEoy]Ssa[oPtY]asS
+[dEoy]Ssa[QstY]aPp[EOwy]pPa[eqsy]SdD
+[0uWx]ZzLzLlklkJjHhGg
+fgfD[fu]g[ft]D[ef]g[fq]D[ef]g[ft]D
+[fu]gfD[fu]g[ft]D[ef]g[fq]D[ef]g[ft]D
+[fu]YyTyTtrtrEeWwQq
+0q0([0f]q[0s]([0p]q[0i]([0p]q[0s](
+[0f]q0([0f]q[0s]([0p]q[0i]([0p]q[0s](
+[0f]qQwWeErtTyYuiIo
+OpPasSdDfgfDfgfD
+[ef][Du][ds]SsgfD[fs]DdS[ps]SdD
+[ef][Do][ds]SsgfD[fs]DdS[ps]SdD
+[ef][Du][ds]S[dip]Ssa[psu]SdD[afOuy]gfD
+[fptu]DdS[dip]Ssa[psu]SdD[afOuy]GhH
+[jopT]HhG[gipy]JjH[dijp]HhG[agoy]GhH
+[dijp]HhGgJjH[dijp]HhG[agoy]GhH
+[dijp]HhG[dhoP]Ggf[dgip]GhH[jopSu]JjH
+[dijp]HhG[egqy]GhH[0ejt]klz[0rWx]cxZ
+[06x]Z[0tz]LlcxZ[tx]ZzL[el]LzZ
+[06x]Z[0tz]LlcxZ[etux]ZzL[elQy]LzZ
+[etux] Hj[Jp]k[il]L[yz]L[lr]k[ly]k[iJ]j
+[Hptu]jJklLzZ[0uWxy]cxZxcxZ
+[etux] Hj[Jp]k[il]L[yz]L[lr]k[ly]k[iJ]j
+]]
+end
 module["Honored One"] = function()
 return [[
 ipasapipas
