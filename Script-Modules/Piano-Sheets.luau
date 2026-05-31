@@ -1,48 +1,32 @@
 local module = {}
 module["Bumbelbee"] = function()
 return [[
-[0x][rZ][Oz]LzLlklkJjHhGg
-[3f][7D][dW]SdSsasaPpOoIi
-uYyTyTtruYyTyTtr
-[6u][0Y][ty]TtiuY[tu]YyT[et]TyY
-[6u][0Y][ty]TtiuY[tu]YyT[et]TyY
-[6u][0Y][ty]T[eqy]Ttr[0et]TyY[09ruW]iuY
-[08eu]YyT[eqy]Ttr[0et]TyY[09ruW]IoO
-[*epw]OoI[9eiq]PpO[epqy]OoI[9irw]IoO
-[epqy]OoIiPpO[epqy]OoI[9irw]IoO
-[epqy]OoI[Eowy]Iiu[eiqy]IoO[0epTw]PpO
-[epqy]OoI[9Eow]Iiu[9eiq]IoO[*0epw]PpO
-[9pq]ere[pr]ere[EP]WEWEWEW
-pere[pr]ere[EP]WEWEWEW
-[ep]PpO[EpW]PpO[ep]P[EpW]O[prw]P[pQt]O
-[pqT]PasSsaPpPasSsaP
-[pq]yuy[du]yuy[DSY]TYTYTYT
-dyuy[du]yuy[DSY]TYTYTYT
-[dy]DdS[dTY]DdS[dy]D[dTY]S[dtu]D[dir]S
-[dEI]DfgGgfDdDfgGgfD
-[dEoy]SsaPDdS[dEoy]Ssa[oPtY]asS
-[dEoy]Ssa[QstY]aPp[EOwy]pPa[eqsy]SdD
-[0uWx]ZzLzLlklkJjHhGg
-fgfD[fu]g[ft]D[ef]g[fq]D[ef]g[ft]D
-[fu]gfD[fu]g[ft]D[ef]g[fq]D[ef]g[ft]D
-[fu]YyTyTtrtrEeWwQq
-0q0([0f]q[0s]([0p]q[0i]([0p]q[0s](
-[0f]q0([0f]q[0s]([0p]q[0i]([0p]q[0s](
-[0f]qQwWeErtTyYuiIo
-OpPasSdDfgfDfgfD
-[ef][Du][ds]SsgfD[fs]DdS[ps]SdD
-[ef][Do][ds]SsgfD[fs]DdS[ps]SdD
-[ef][Du][ds]S[dip]Ssa[psu]SdD[afOuy]gfD
-[fptu]DdS[dip]Ssa[psu]SdD[afOuy]GhH
-[jopT]HhG[gipy]JjH[dijp]HhG[agoy]GhH
-[dijp]HhGgJjH[dijp]HhG[agoy]GhH
-[dijp]HhG[dhoP]Ggf[dgip]GhH[jopSu]JjH
-[dijp]HhG[egqy]GhH[0ejt]klz[0rWx]cxZ
-[06x]Z[0tz]LlcxZ[tx]ZzL[el]LzZ
-[06x]Z[0tz]LlcxZ[etux]ZzL[elQy]LzZ
-[etux] Hj[Jp]k[il]L[yz]L[lr]k[ly]k[iJ]j
-[Hptu]jJklLzZ[0uWxy]cxZxcxZ
-[etux] Hj[Jp]k[il]L[yz]L[lr]k[ly]k[iJ]j
+[4gOqs]-[03fhs]-[(@DHs]-[29dgl]-[!9H] 
+[!*gkS]-J-[!*fHs] [18]-[18Os] [(@D] 
+[4DOqs]f[4q][03gOs] [03][(@] [(@][29] [29][%] [%] 
+[4HlqZ]x[4q][03cHl] [03][(@] [(@][29] [29][%] [%] 
+[4gOqs]-[03fhs] [fhs] [(@DHs]-[29dgl]-[!9H] 
+[!*gkS]-J-[!*fHs] [18]-[18Hl]Z[(@]x
+[4cHlq]-[7r] [^E][%OW] [4iq] [is][7r][gO][^E][%fW] 
+[4q][adi][4q][03][au][03][(@oY] [(@aY][29][oy][29fy][%][Ot][%] 
+4 [tWY]q [tWY] q [qtWY]qq [tWy]qq
+4[tWY] [tWY] 4 [tWY] q [tWY][tWy] qq
+[4q] [^E] [8t][(Y] [iq] [(Y][8t][%W][^E][%W]-
+[4q] [^E] [8t][(Y] [iq] [(Y][8t][%W][EP][OW]-
+4 [tWY]q [tWY] q [qtWY]qq [tWy]qq
+4[tWY] [tWY] 4 [tWY] q [tWY][tWy] qq
+[4q] [^E] [8t][(Y] [iq] [(Y][8t][%W][^E][%W]-
+[4q] [^E] [8t][(Y] [iq] [(Y][8t][%W][EP][OW]-
+i----
+[gOqst]-[0fhst]-[(DHst]-[9dgly]-[9Ht] 
+[*gkST]-J-[8EfHs]--[18Ost]-
+[DOqst]f [gOs]--[0t]-[(t]-
+[9t]-[*t]-[8t]----
+[cgHlqt]-[0hltvx] [hlvx] [(HltVZ]-[9clmyz]-[9HV] 
+[*ckLnT]-[BJ]-[8EHlVx]--[18Hls][DHlZ][fx]
+[cgHlqt]--[0ct]xZl[(kt]JHg
+[9ht]HJ[*kt]lJ[8Ht]hgHJlLzZx
+[4cHl]
 ]]
 end
 module["Honored One"] = function()
