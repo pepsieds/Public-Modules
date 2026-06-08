@@ -2,34 +2,21 @@ local LocalPlayer = game:GetService('Players').LocalPlayer
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
+local GameID = game.GameId
 local CurrentCamera = Workspace.CurrentCamera
 local Camera = CurrentCamera
-local GameID = game.GameId
-
+local lighting = game:GetService("Lighting")
 local Drawing = Drawing
 
--- =============================================
--- REPLICATION INTERFACE SUPPORT
--- =============================================
-local ReplicationInterface = nil
-pcall(function()
-	local env = getrenv()
-	if env.shared and env.shared.require then
-		ReplicationInterface = env.shared.require("ReplicationInterface")
-	end
-end)
-
-if not ReplicationInterface then
-	pcall(function()
-		ReplicationInterface = require(game:GetService("ReplicatedStorage"):WaitForChild("Modules", 1):WaitForChild("ReplicationInterface", 1))
-	end)
-end
+warn('running static phantom forces v1.0.0')
 
 SKELETON_UPDATE_INTERVAL = 1 / 90
 CHAMS_UPDATE_INTERVAL = 1 / 60
 
 _G.ESP_CONFIGURATION = {}
+
 local Config = _G.ESP_CONFIGURATION
 
 Config.Visuals = {
@@ -194,67 +181,6 @@ Config.ESP = {
 	},
 }
 
--- =============================================
--- REPLICATION HELPERS
--- =============================================
-local function GetReplicationModels()
-	if not ReplicationInterface then return {} end
-	local models = {}
-
-	local entries = ReplicationInterface.getEntries and ReplicationInterface.getEntries() or {}
-	for _, entry in pairs(entries) do
-		if entry and entry.getThirdPersonObject then
-			local tp = entry:getThirdPersonObject()
-			if tp and tp.getCharacterHash then
-				local hash = tp:getCharacterHash()
-				if hash and typeof(hash) == "table" then
-					local root = hash.HumanoidRootPart or hash.Head or next(hash)
-					if root then
-						local model = root:FindFirstAncestorWhichIsA("Model")
-						if model and model ~= LocalPlayer.Character and model.Parent then
-							table.insert(models, model)
-						end
-					end
-				end
-			end
-		end
-	end
-	return models
-end
-
--- Override GetEncryptedEnemyModels to include replication models
-local OriginalGetEncrypted = GetEncryptedEnemyModels
-GetEncryptedEnemyModels = function(useTeamCheck)
-	local models = OriginalGetEncrypted and OriginalGetEncrypted(useTeamCheck) or {}
-
-	for _, model in ipairs(GetReplicationModels()) do
-		table.insert(models, model)
-	end
-
-	-- Remove duplicates
-	local seen = {}
-	local unique = {}
-	for _, m in ipairs(models) do
-		if m and m.Parent and not seen[m] then
-			seen[m] = true
-			table.insert(unique, m)
-		end
-	end
-	return unique
-end
-
--- Improve Head Detection
-local OriginalHead = GetEncryptedHeadPart
-GetEncryptedHeadPart = function(model)
-	if not model then return nil end
-	local head = OriginalHead and OriginalHead(model)
-	if head then return head end
-
-	-- Replication fallback
-	return model:FindFirstChild("Head", true) 
-		or model:FindFirstChildWhichIsA("BasePart", true) -- last resort
-end
-
 --========================================================--
 --  ESP FUNCTIONS
 --========================================================--
@@ -345,11 +271,114 @@ RADAR_MAP_LOCKED_COLORS = {
 	Prop = Color3.fromRGB(170, 150, 190),
 }
 
+local Environment = getrenv( );
+
+local Shared = Environment.shared;
+local Require = Shared.require;
+
+local TableClone = table.clone;
+
+-- Modules
+local PlayerSettingsInterface = Require( "PlayerSettingsInterface" );
+local ReplicationInterface = Require( "ReplicationInterface" );
+
+-- Classes
+local PlayerObject = { Entry = nil }; do
+	function PlayerObject : Initiate( Player )
+		local ReplicationObject = ReplicationInterface.getEntry( Player );
+
+		local ClassObject = TableClone( PlayerObject );
+		ClassObject.Entry = ReplicationObject;
+
+		return ClassObject;
+	end
+
+	function PlayerObject : Character( )
+		local ReplicationObject, Result = self.Entry, { };
+
+		if ( ReplicationObject ) then
+			local ThirdPersonObject = ReplicationObject : getThirdPersonObject( );
+
+			if ( not ThirdPersonObject ) then
+				return Result;
+			end
+
+			Result = ThirdPersonObject : getCharacterHash( );
+		end
+
+		return Result;
+	end
+
+	PlayerObject = setmetatable( PlayerObject, { __call = function( Self, Player )
+		local ReplicationObject = ReplicationInterface.getEntry( Player );
+
+		local ClassObject = TableClone( PlayerObject );
+		ClassObject.Entry = ReplicationObject;
+
+		return ClassObject;
+	end });
+end
+
+local PlayerObjectCache = {}
+
+local function CreatePlayerObjectForESP(player)
+	if not PlayerObject then
+		return nil
+	end
+
+	local success, result = pcall(function()
+		return PlayerObject(player)
+	end)
+
+	if success and result then
+		return result
+	end
+
+	return nil
+end
+
+local function ReadPlayerObjectCharacter(object)
+	if not object then
+		return nil
+	end
+
+	local success, characterHash = pcall(function()
+		return object:Character()
+	end)
+
+	if success and type(characterHash) == "table" and next(characterHash) ~= nil then
+		return characterHash
+	end
+
+	return nil
+end
+
 local function GetPlayerCharacter(player)
-	if not player then return nil end
+	if not player then
+		return nil
+	end
+
+	local object = PlayerObjectCache[player]
+	local characterHash = ReadPlayerObjectCharacter(object)
+
+	if characterHash then
+		return characterHash
+	end
+
+	-- Replication entries can change after respawn, so refresh the cached PlayerObject
+	-- when the old one returns an empty hash.
+	object = CreatePlayerObjectForESP(player)
+	PlayerObjectCache[player] = object
+	characterHash = ReadPlayerObjectCharacter(object)
+
+	if characterHash then
+		return characterHash
+	end
+
 	if player.Character and player.Character.Parent then
 		return player.Character
 	end
+
 	return nil
 end
 
@@ -483,51 +512,319 @@ function GetCharacterDataCache(character)
 	return cache
 end
 
+local function IsValidBasePart(value)
+	return typeof(value) == "Instance" and value:IsA("BasePart") and value.Parent ~= nil
+end
+
+local function IsValidHumanoid(value)
+	return typeof(value) == "Instance" and value:IsA("Humanoid") and value.Parent ~= nil
+end
+
+local function IsCharacterHash(character)
+	return type(character) == "table"
+end
+
+local function CleanPartName(value)
+	return tostring(value or ""):lower():gsub("%s+", "")
+end
+
+local function GetValueObjectNumber(value)
+	if typeof(value) == "Instance" then
+		if value:IsA("NumberValue") or value:IsA("IntValue") then
+			return value.Value
+		end
+	end
+
+	if type(value) == "number" then
+		return value
+	end
+
+	return nil
+end
+
+local function FindPartInHash(hash, names)
+	if type(hash) ~= "table" then
+		return nil
+	end
+
+	for _, name in ipairs(names) do
+		local direct = rawget(hash, name)
+		if IsValidBasePart(direct) then
+			return direct
+		end
+
+		local lower = rawget(hash, tostring(name):lower())
+		if IsValidBasePart(lower) then
+			return lower
+		end
+	end
+
+	for key, value in pairs(hash) do
+		if IsValidBasePart(value) then
+			local cleanKey = CleanPartName(key)
+
+			for _, name in ipairs(names) do
+				if cleanKey == CleanPartName(name) then
+					return value
+				end
+			end
+		end
+	end
+
+	return nil
+end
+
+local function GetCharacterPart(character, ...)
+	local names = { ... }
+
+	if typeof(character) == "Instance" then
+		for _, name in ipairs(names) do
+			local part = character:FindFirstChild(name) or character:FindFirstChild(name, true)
+			if IsValidBasePart(part) then
+				return part
+			end
+		end
+	elseif type(character) == "table" then
+		return FindPartInHash(character, names)
+	end
+
+	return nil
+end
+
+local function GetCharacterBaseParts(character)
+	local parts = {}
+	local seen = {}
+
+	local function addPart(part)
+		if IsValidBasePart(part) and not seen[part] then
+			seen[part] = true
+
+			if part.Transparency < 1 and part.Size.Magnitude > 0.1 then
+				parts[#parts + 1] = part
+			end
+		end
+	end
+
+	if typeof(character) == "Instance" then
+		if character:IsA("BasePart") then
+			addPart(character)
+		else
+			for _, obj in ipairs(character:GetDescendants()) do
+				addPart(obj)
+			end
+		end
+	elseif type(character) == "table" then
+		for _, value in pairs(character) do
+			addPart(value)
+		end
+	end
+
+	return parts
+end
+
+local function FindHighestPartInHash(hash)
+	local highest = nil
+
+	for _, part in ipairs(GetCharacterBaseParts(hash)) do
+		if not highest or part.Position.Y > highest.Position.Y then
+			highest = part
+		end
+	end
+
+	return highest
+end
+
+local function FindBestRootInHash(hash)
+	local root = FindPartInHash(hash, {
+		"HumanoidRootPart",
+		"RootPart",
+		"Root",
+		"Torso",
+		"UpperTorso",
+		"LowerTorso"
+	})
+
+	if root then
+		return root
+	end
+
+	local best = nil
+	local bestSize = 0
+
+	for _, part in ipairs(GetCharacterBaseParts(hash)) do
+		local size = part.Size.Magnitude
+
+		if size > bestSize then
+			best = part
+			bestSize = size
+		end
+	end
+
+	return best
+end
+
+local function FindHumanoidInHash(hash)
+	if type(hash) ~= "table" then
+		return nil
+	end
+
+	local humanoid = rawget(hash, "Humanoid") or rawget(hash, "humanoid")
+
+	if IsValidHumanoid(humanoid) then
+		return humanoid
+	end
+
+	for _, value in pairs(hash) do
+		if IsValidHumanoid(value) then
+			return value
+		end
+	end
+
+	local health = GetValueObjectNumber(rawget(hash, "Health") or rawget(hash, "health"))
+	local maxHealth = GetValueObjectNumber(rawget(hash, "MaxHealth") or rawget(hash, "maxHealth"))
+
+	if health then
+		return {
+			Health = health,
+			MaxHealth = math.max(maxHealth or 100, 1),
+			_IsFakeHumanoid = true
+		}
+	end
+
+	-- Some replicated character hashes only expose body parts, not a real Humanoid.
+	-- This fake object prevents ESP from crashing while still letting boxes/tracers draw.
+	return {
+		Health = 100,
+		MaxHealth = 100,
+		_IsFakeHumanoid = true
+	}
+end
+
+local function GetCharacterModelFromAny(character)
+	if typeof(character) == "Instance" then
+		if character:IsA("Model") then
+			return character
+		end
+
+		return character:FindFirstAncestorOfClass("Model")
+	elseif type(character) == "table" then
+		for _, part in ipairs(GetCharacterBaseParts(character)) do
+			local model = part:FindFirstAncestorOfClass("Model")
+			if model then
+				return model
+			end
+		end
+	end
+
+	return nil
+end
+
+local function IsPartInCharacter(part, character)
+	if not IsValidBasePart(part) then
+		return false
+	end
+
+	if typeof(character) == "Instance" then
+		return part:IsDescendantOf(character)
+	elseif type(character) == "table" then
+		for _, value in pairs(character) do
+			if value == part then
+				return true
+			end
+		end
+
+		local model = GetCharacterModelFromAny(character)
+		return model ~= nil and part:IsDescendantOf(model)
+	end
+
+	return false
+end
+
 function RefreshCharacterCoreCache(character)
 	local cache = GetCharacterDataCache(character)
 	if not cache then return nil end
 
 	local now = tick()
+
 	if not cache.CoreStamp or (now - cache.CoreStamp) >= CHARACTER_CACHE_TTL then
-		cache.Humanoid = character:FindFirstChildOfClass("Humanoid")
-		cache.RootPart = character:FindFirstChild("HumanoidRootPart") or character:FindFirstChild("HumanoidRootPart", true)
-		cache.HeadPart = character:FindFirstChild("Head") or character:FindFirstChild("Head", true)
+		if typeof(character) == "Instance" then
+			cache.Humanoid = character:FindFirstChildOfClass("Humanoid")
+			cache.RootPart =
+				character:FindFirstChild("HumanoidRootPart")
+				or character:FindFirstChild("HumanoidRootPart", true)
+				or character:FindFirstChild("Torso")
+				or character:FindFirstChild("UpperTorso")
+				or character:FindFirstChild("LowerTorso")
+				or GetCharacterPart(character, "RootPart", "Root")
+
+			cache.HeadPart =
+				character:FindFirstChild("Head")
+				or character:FindFirstChild("Head", true)
+				or GetHighestPart(character, cache.RootPart)
+				or cache.RootPart
+
+			cache.IsHashCharacter = false
+		elseif type(character) == "table" then
+			cache.Humanoid = FindHumanoidInHash(character)
+			cache.RootPart = FindBestRootInHash(character)
+			cache.HeadPart = GetCharacterPart(character, "Head") or FindHighestPartInHash(character) or cache.RootPart
+			cache.IsHashCharacter = true
+		else
+			cache.Humanoid = nil
+			cache.RootPart = nil
+			cache.HeadPart = nil
+			cache.IsHashCharacter = false
+		end
+
 		cache.CoreStamp = now
 	end
 
-	if cache.RootPart and not cache.RootPart:IsDescendantOf(character) then
-		cache.RootPart = nil
-	end
-	if cache.HeadPart and not cache.HeadPart:IsDescendantOf(character) then
-		cache.HeadPart = nil
-	end
-	if cache.Humanoid and not cache.Humanoid:IsDescendantOf(character) then
-		cache.Humanoid = nil
+	if cache.IsHashCharacter then
+		if cache.RootPart and not IsValidBasePart(cache.RootPart) then
+			cache.RootPart = nil
+		end
+
+		if cache.HeadPart and not IsValidBasePart(cache.HeadPart) then
+			cache.HeadPart = nil
+		end
+
+		if cache.Humanoid and not cache.Humanoid._IsFakeHumanoid and not IsValidHumanoid(cache.Humanoid) then
+			cache.Humanoid = nil
+		end
+	else
+		if cache.RootPart and not cache.RootPart:IsDescendantOf(character) then
+			cache.RootPart = nil
+		end
+
+		if cache.HeadPart and not cache.HeadPart:IsDescendantOf(character) then
+			cache.HeadPart = nil
+		end
+
+		if cache.Humanoid and not cache.Humanoid:IsDescendantOf(character) then
+			cache.Humanoid = nil
+		end
 	end
 
 	return cache
 end
 
-local function BuildBasePartList(model)
-	local parts = {}
-	for _, obj in ipairs(model:GetDescendants()) do
-		if obj:IsA("BasePart") and obj.Transparency < 1 and obj.Size.Magnitude > 0.1 then
-			parts[#parts + 1] = obj
-		end
-	end
-	return parts
+local function BuildBasePartList(character)
+	return GetCharacterBaseParts(character)
 end
 
 function GetCharacterPartsCached(character)
 	if not character then return nil end
+
 	local cache = CharacterPartCache[character]
 	local now = tick()
+
 	if not cache or (now - (cache.Stamp or 0)) >= CHARACTER_PARTS_CACHE_TTL then
 		cache = cache or {}
 		cache.Parts = BuildBasePartList(character)
 		cache.Stamp = now
 		CharacterPartCache[character] = cache
 	end
+
 	return cache.Parts
 end
 
@@ -541,40 +838,47 @@ function RefreshCharacterSkeletonCache(character)
 	end
 
 	local bones = {
-		Head = character:FindFirstChild("Head"),
-		UpperTorso = character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso"),
-		LowerTorso = character:FindFirstChild("LowerTorso") or character:FindFirstChild("Torso"),
-		LeftUpperArm = character:FindFirstChild("LeftUpperArm") or character:FindFirstChild("Left Arm"),
-		LeftLowerArm = character:FindFirstChild("LeftLowerArm") or character:FindFirstChild("Left Arm"),
-		LeftHand = character:FindFirstChild("LeftHand") or character:FindFirstChild("Left Arm"),
-		RightUpperArm = character:FindFirstChild("RightUpperArm") or character:FindFirstChild("Right Arm"),
-		RightLowerArm = character:FindFirstChild("RightLowerArm") or character:FindFirstChild("Right Arm"),
-		RightHand = character:FindFirstChild("RightHand") or character:FindFirstChild("Right Arm"),
-		LeftUpperLeg = character:FindFirstChild("LeftUpperLeg") or character:FindFirstChild("Left Leg"),
-		LeftLowerLeg = character:FindFirstChild("LeftLowerLeg") or character:FindFirstChild("Left Leg"),
-		LeftFoot = character:FindFirstChild("LeftFoot") or character:FindFirstChild("Left Leg"),
-		RightUpperLeg = character:FindFirstChild("RightUpperLeg") or character:FindFirstChild("Right Leg"),
-		RightLowerLeg = character:FindFirstChild("RightLowerLeg") or character:FindFirstChild("Right Leg"),
-		RightFoot = character:FindFirstChild("RightFoot") or character:FindFirstChild("Right Leg")
+		Head = GetCharacterPart(character, "Head"),
+
+		UpperTorso = GetCharacterPart(character, "UpperTorso", "Torso"),
+		LowerTorso = GetCharacterPart(character, "LowerTorso", "Torso"),
+
+		LeftUpperArm = GetCharacterPart(character, "LeftUpperArm", "Left Arm"),
+		LeftLowerArm = GetCharacterPart(character, "LeftLowerArm", "Left Arm"),
+		LeftHand = GetCharacterPart(character, "LeftHand", "Left Arm"),
+
+		RightUpperArm = GetCharacterPart(character, "RightUpperArm", "Right Arm"),
+		RightLowerArm = GetCharacterPart(character, "RightLowerArm", "Right Arm"),
+		RightHand = GetCharacterPart(character, "RightHand", "Right Arm"),
+
+		LeftUpperLeg = GetCharacterPart(character, "LeftUpperLeg", "Left Leg"),
+		LeftLowerLeg = GetCharacterPart(character, "LeftLowerLeg", "Left Leg"),
+		LeftFoot = GetCharacterPart(character, "LeftFoot", "Left Leg"),
+
+		RightUpperLeg = GetCharacterPart(character, "RightUpperLeg", "Right Leg"),
+		RightLowerLeg = GetCharacterPart(character, "RightLowerLeg", "Right Leg"),
+		RightFoot = GetCharacterPart(character, "RightFoot", "Right Leg")
 	}
 
 	local skeletonData = { Bones = bones, GenericPairs = nil }
+
 	if not (bones.Head and bones.UpperTorso) then
-		local root = GetBestBasePart(character, "HumanoidRootPart")
+		local core = RefreshCharacterCoreCache(character)
+		local root = core and core.RootPart
 		local high, low, left, right = nil, nil, nil, nil
-		for _, obj in ipairs(character:GetDescendants()) do
-			if obj:IsA("BasePart") then
-				if not high or obj.Position.Y > high.Position.Y then high = obj end
-				if not low or obj.Position.Y < low.Position.Y then low = obj end
-				if not left or obj.Position.X < left.Position.X then left = obj end
-				if not right or obj.Position.X > right.Position.X then right = obj end
-			end
+
+		for _, obj in ipairs(GetCharacterBaseParts(character)) do
+			if not high or obj.Position.Y > high.Position.Y then high = obj end
+			if not low or obj.Position.Y < low.Position.Y then low = obj end
+			if not left or obj.Position.X < left.Position.X then left = obj end
+			if not right or obj.Position.X > right.Position.X then right = obj end
 		end
+
 		skeletonData.GenericPairs = {
-			{high, root},
-			{root, low},
-			{root, left},
-			{root, right}
+			{ high, root },
+			{ root, low },
+			{ root, left },
+			{ root, right }
 		}
 	end
 
@@ -596,8 +900,9 @@ function RefreshCharacterChamsPartCache(character)
 	local hasNamedPart = false
 
 	for _, partName in ipairs(CHAMS_PART_NAMES) do
-		local part = character:FindFirstChild(partName)
-		if part and part:IsA("BasePart") then
+		local part = GetCharacterPart(character, partName)
+
+		if IsValidBasePart(part) then
 			hasNamedPart = true
 			entries[#entries + 1] = { key = partName, part = part }
 		end
@@ -605,10 +910,13 @@ function RefreshCharacterChamsPartCache(character)
 
 	if not hasNamedPart then
 		local count = 0
-		for _, part in ipairs(character:GetDescendants()) do
-			if part:IsA("BasePart") and part.Transparency < 1 and part.Size.Magnitude > 0.2 then
-				count = count + 1
+
+		for _, part in ipairs(GetCharacterBaseParts(character)) do
+			if part.Transparency < 1 and part.Size.Magnitude > 0.2 then
+				count += 1
+
 				if count > 30 then break end
+
 				entries[#entries + 1] = { key = part, part = part }
 			end
 		end
@@ -621,11 +929,14 @@ function RefreshCharacterChamsPartCache(character)
 end
 
 function GetTeamFolderFromCharacter(character)
-	if not character or not character.Parent then return nil end
-	local parent = character.Parent
+	local model = GetCharacterModelFromAny(character)
+	if not model then return nil end
+
+	local parent = model.Parent
 	if parent and parent.Parent and parent.Parent.Name == "Players" and parent ~= game then
 		return parent
 	end
+
 	return nil
 end
 
@@ -647,7 +958,14 @@ function IsPlayerEnemy(targetPlayer)
 
 	local targetChar = GetPlayerCharacter(targetPlayer)
 	if targetChar then
-		local tinyHead = GetEncryptedHeadPart and GetEncryptedHeadPart(targetChar)
+		local tinyHead = nil
+
+		if typeof(targetChar) == "Instance" and GetEncryptedHeadPart then
+			tinyHead = GetEncryptedHeadPart(targetChar)
+		else
+			tinyHead = GetCharacterPart(targetChar, "Head")
+		end
+
 		if tinyHead then
 			local tag = tinyHead:FindFirstChild("PlayerTag", true)
 			if tag and tag:IsA("TextLabel") then
@@ -659,6 +977,7 @@ function IsPlayerEnemy(targetPlayer)
 	local myChar = LocalPlayer.Character
 	local myTeamFolder = GetTeamFolderFromCharacter(myChar)
 	local targetTeamFolder = GetTeamFolderFromCharacter(targetChar)
+
 	if myTeamFolder and targetTeamFolder then
 		return myTeamFolder ~= targetTeamFolder
 	end
@@ -2139,30 +2458,24 @@ GetLocalRootPartForESP = function()
 end
 
 GetBestBasePart = function(model, preferredName)
-	local named = model:FindFirstChild(preferredName, true)
-	if named and named:IsA("BasePart") then
-		return named
+	local preferred = GetCharacterPart(model, preferredName or "HumanoidRootPart")
+	if preferred then
+		return preferred
 	end
 
-	local firstPart = nil
-	for _, obj in ipairs(model:GetDescendants()) do
-		if obj:IsA("BasePart") then
-			firstPart = obj
-			break
-		end
-	end
-	return firstPart
+	local parts = GetCharacterBaseParts(model)
+	return parts[1]
 end
 
 function GetHighestPart(model, fallbackPart)
 	local highest = nil
-	for _, obj in ipairs(model:GetDescendants()) do
-		if obj:IsA("BasePart") then
-			if not highest or obj.Position.Y > highest.Position.Y then
-				highest = obj
-			end
+
+	for _, obj in ipairs(GetCharacterBaseParts(model)) do
+		if not highest or obj.Position.Y > highest.Position.Y then
+			highest = obj
 		end
 	end
+
 	return highest or fallbackPart
 end
 
@@ -2406,6 +2719,10 @@ GetModelHealthValues = function(model)
 end
 
 function RemoveESP(player)
+	PlayerObjectCache[player] = nil
+	CharacterDataCache[player] = nil
+	CharacterPartCache[player] = nil
+
 	if _G.ESPDrawings[player] then
 		if _G.ESPDrawings[player].Box then
 			for _, line in pairs(_G.ESPDrawings[player].Box) do
@@ -2532,10 +2849,7 @@ function UpdateBoxes(player, esp, character, humanoid, rootPart, forcedHead)
 		end
 	end
 
-	local head = forcedHead or character:FindFirstChild("Head") or character:FindFirstChild("Head", true)
-	if not head then
-		head = GetHighestPart(character, rootPart)
-	end
+	local head = forcedHead or GetCharacterPart(character, "Head") or GetHighestPart(character, rootPart)
 	if not head then
 		if esp.Box then
 			for _, line in pairs(esp.Box) do
@@ -2977,10 +3291,29 @@ end
 
 function GetCharacterToolName(character)
 	if not character then return nil end
-	local tool = character:FindFirstChildOfClass("Tool")
-	if tool and tool.Name and tool.Name ~= "" then
-		return tool.Name
+
+	if typeof(character) == "Instance" then
+		local tool = character:FindFirstChildOfClass("Tool")
+		if tool and tool.Name and tool.Name ~= "" then
+			return tool.Name
+		end
+	elseif type(character) == "table" then
+		local tool = rawget(character, "Tool") or rawget(character, "tool") or rawget(character, "Weapon") or rawget(character, "weapon")
+		if typeof(tool) == "Instance" and tool.Name and tool.Name ~= "" then
+			return tool.Name
+		elseif type(tool) == "string" and tool ~= "" then
+			return tool
+		end
+
+		local model = GetCharacterModelFromAny(character)
+		if model then
+			local instanceTool = model:FindFirstChildOfClass("Tool")
+			if instanceTool and instanceTool.Name and instanceTool.Name ~= "" then
+				return instanceTool.Name
+			end
+		end
 	end
+
 	return nil
 end
 
@@ -3131,7 +3464,7 @@ function UpdateSkeleton(player, esp, character, rootPart)
 		local from, to = bones[keys[1]], bones[keys[2]]
 		local line = esp.Skeleton[i]
 
-		if from and to and line and from:IsDescendantOf(character) and to:IsDescendantOf(character) then
+		if from and to and line and IsPartInCharacter(from, character) and IsPartInCharacter(to, character) then
 			local fromPos, fromOnScreen = Camera:WorldToViewportPoint(from.Position)
 			local toPos, toOnScreen = Camera:WorldToViewportPoint(to.Position)
 
@@ -3293,9 +3626,14 @@ function UpdateChams(player, character, rootPart, cameraPos, isLocked)
 	end
 
 	for key, quads in pairs(quadsForPlayer) do
-		local keep = (typeof(key) == "Instance")
-			and key.Parent and key:IsDescendantOf(character)
-			or (character:FindFirstChild(key) ~= nil)
+		local keep = false
+
+		if typeof(key) == "Instance" then
+			keep = key.Parent ~= nil and IsPartInCharacter(key, character)
+		elseif type(key) == "string" then
+			keep = GetCharacterPart(character, key) ~= nil
+		end
+
 		if not keep then
 			for _, q in ipairs(quads) do q.Visible = false end
 		end
@@ -3314,7 +3652,9 @@ function UpdateESP(player)
 	if not esp then return end
 
 	local function HideAllESP() HideESPDrawings(esp) end
-	if player == LocalPlayer or not GetPlayerCharacter(player) then
+	local character = GetPlayerCharacter(player)
+
+	if player == LocalPlayer or not character then
 		HideAllESP()
 		return
 	end
@@ -3323,8 +3663,6 @@ function UpdateESP(player)
 		HideAllESP()
 		return
 	end
-
-	local character = GetPlayerCharacter(player)
 	local core = RefreshCharacterCoreCache(character)
 	local humanoid = core and core.Humanoid
 	local rootPart = core and core.RootPart
@@ -3738,14 +4076,3 @@ for _, player in ipairs(GetPlayersListCached()) do
 		CreateESP(player)
 	end
 end
-
-task.spawn(function()
-	while true do
-		task.wait(0.4)
-		if Config.ESP.Enabled then
-			pcall(UpdateEncryptedTargets)
-		end
-	end
-end)
-
-print("✅ ESP Loaded with ReplicationInterface Support")
