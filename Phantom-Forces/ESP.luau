@@ -2,19 +2,34 @@ local LocalPlayer = game:GetService('Players').LocalPlayer
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
-local GameID = game.GameId
 local CurrentCamera = Workspace.CurrentCamera
 local Camera = CurrentCamera
-local lighting = game:GetService("Lighting")
+local GameID = game.GameId
+
 local Drawing = Drawing
+
+-- =============================================
+-- REPLICATION INTERFACE SUPPORT
+-- =============================================
+local ReplicationInterface = nil
+pcall(function()
+	local env = getrenv()
+	if env.shared and env.shared.require then
+		ReplicationInterface = env.shared.require("ReplicationInterface")
+	end
+end)
+
+if not ReplicationInterface then
+	pcall(function()
+		ReplicationInterface = require(game:GetService("ReplicatedStorage"):WaitForChild("Modules", 1):WaitForChild("ReplicationInterface", 1))
+	end)
+end
 
 SKELETON_UPDATE_INTERVAL = 1 / 90
 CHAMS_UPDATE_INTERVAL = 1 / 60
 
 _G.ESP_CONFIGURATION = {}
-
 local Config = _G.ESP_CONFIGURATION
 
 Config.Visuals = {
@@ -179,6 +194,67 @@ Config.ESP = {
 	},
 }
 
+-- =============================================
+-- REPLICATION HELPERS
+-- =============================================
+local function GetReplicationModels()
+	if not ReplicationInterface then return {} end
+	local models = {}
+
+	local entries = ReplicationInterface.getEntries and ReplicationInterface.getEntries() or {}
+	for _, entry in pairs(entries) do
+		if entry and entry.getThirdPersonObject then
+			local tp = entry:getThirdPersonObject()
+			if tp and tp.getCharacterHash then
+				local hash = tp:getCharacterHash()
+				if hash and typeof(hash) == "table" then
+					local root = hash.HumanoidRootPart or hash.Head or next(hash)
+					if root then
+						local model = root:FindFirstAncestorWhichIsA("Model")
+						if model and model ~= LocalPlayer.Character and model.Parent then
+							table.insert(models, model)
+						end
+					end
+				end
+			end
+		end
+	end
+	return models
+end
+
+-- Override GetEncryptedEnemyModels to include replication models
+local OriginalGetEncrypted = GetEncryptedEnemyModels
+GetEncryptedEnemyModels = function(useTeamCheck)
+	local models = OriginalGetEncrypted and OriginalGetEncrypted(useTeamCheck) or {}
+
+	for _, model in ipairs(GetReplicationModels()) do
+		table.insert(models, model)
+	end
+
+	-- Remove duplicates
+	local seen = {}
+	local unique = {}
+	for _, m in ipairs(models) do
+		if m and m.Parent and not seen[m] then
+			seen[m] = true
+			table.insert(unique, m)
+		end
+	end
+	return unique
+end
+
+-- Improve Head Detection
+local OriginalHead = GetEncryptedHeadPart
+GetEncryptedHeadPart = function(model)
+	if not model then return nil end
+	local head = OriginalHead and OriginalHead(model)
+	if head then return head end
+
+	-- Replication fallback
+	return model:FindFirstChild("Head", true) 
+		or model:FindFirstChildWhichIsA("BasePart", true) -- last resort
+end
+
 --========================================================--
 --  ESP FUNCTIONS
 --========================================================--
@@ -207,61 +283,6 @@ CharacterDataCache = setmetatable({}, { __mode = "k" })
 CharacterPartCache = setmetatable({}, { __mode = "k" })
 xraymapcache = {}
 xraymapconnection = nil
-
--- ============== REPLICATION TARGET SUPPORT ==============
-_G.ReplicationTargets = _G.ReplicationTargets or {}
-
--- Hook into your ReplicationInterface if possible
-local function GetReplicationModels()
-	local models = {}
-	local ReplicationInterface = nil
-
-	-- Try to find ReplicationInterface (adjust path if needed)
-	pcall(function()
-		local env = getrenv()
-		if env.shared and env.shared.require then
-			ReplicationInterface = env.shared.require("ReplicationInterface")
-		end
-	end)
-
-	if ReplicationInterface and ReplicationInterface.getEntries then
-		for _, entry in pairs(ReplicationInterface.getEntries() or {}) do
-			local tpObject = entry:getThirdPersonObject()
-			if tpObject then
-				local charHash = tpObject:getCharacterHash()
-				if charHash and typeof(charHash) == "table" and charHash.Head then
-					local model = charHash.Head:FindFirstAncestorWhichIsA("Model")
-					if model and model ~= LocalPlayer.Character then
-						table.insert(models, model)
-					end
-				end
-			end
-		end
-	end
-	return models
-end
-
--- Add replication models to encrypted targets
-local oldGetEncryptedEnemyModels = GetEncryptedEnemyModels
-GetEncryptedEnemyModels = function(useTeamCheck)
-	local models = oldGetEncryptedEnemyModels and oldGetEncryptedEnemyModels(useTeamCheck) or {}
-
-	-- Add replication targets
-	for _, model in ipairs(GetReplicationModels()) do
-		table.insert(models, model)
-	end
-
-	-- Remove duplicates
-	local seen = {}
-	local unique = {}
-	for _, m in ipairs(models) do
-		if m and m.Parent and not seen[m] then
-			seen[m] = true
-			table.insert(unique, m)
-		end
-	end
-	return unique
-end
 
 CHAMS_PART_NAMES = {
 	"Head", "UpperTorso", "LowerTorso",
@@ -2276,28 +2297,33 @@ GetEncryptedEnemyModelsCached = function(useTeamCheck)
 	return models
 end
 
--- Improved version
-local oldGetEncryptedHeadPart = GetEncryptedHeadPart
 GetEncryptedHeadPart = function(model)
 	if not model then return nil end
 
-	-- Try tiny head first (your current logic)
-	local head = oldGetEncryptedHeadPart and oldGetEncryptedHeadPart(model)
-	if head then return head end
-
-	-- Fallback for replication models
-	if model:FindFirstChild("Head", true) then
-		return model:FindFirstChild("Head", true)
+	local preferred = model:FindFirstChild("Head", true)
+	if IsTinyHeadPart(preferred) then
+		return preferred
 	end
 
-	-- Look for any part named Head in character hash style
+	local redTagColor = Color3.fromRGB(255, 10, 20)
+	local tolerance = 0.02
+
 	for _, part in ipairs(model:GetDescendants()) do
-		if part:IsA("BasePart") and (part.Name == "Head" or part.Name:find("Head")) then
+		if part:IsA("BasePart") and IsTinyHeadPart(part) then
+			local tag = part:FindFirstChild("PlayerTag", true)
+			if tag and tag:IsA("TextLabel") and ColorNear(tag.TextColor3, redTagColor, tolerance) then
+				return part
+			end
+		end
+	end
+
+	for _, part in ipairs(model:GetDescendants()) do
+		if part:IsA("BasePart") and IsTinyHeadPart(part) then
 			return part
 		end
 	end
 
-	return GetBestBasePart(model, "Head") or GetBestBasePart(model, "HumanoidRootPart")
+	return nil
 end
 
 function ResolveEncryptedName(model)
@@ -3713,11 +3739,13 @@ for _, player in ipairs(GetPlayersListCached()) do
 	end
 end
 
--- Force update for replication targets
 task.spawn(function()
-	while wait(1) do
+	while true do
+		task.wait(0.4)
 		if Config.ESP.Enabled then
 			pcall(UpdateEncryptedTargets)
 		end
 	end
 end)
+
+print("✅ ESP Loaded with ReplicationInterface Support")
